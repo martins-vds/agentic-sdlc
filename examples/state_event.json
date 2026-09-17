@@ -1,0 +1,11 @@
+{
+  "event_type": "implementation.accepted",
+  "source": "scripts/implement/apply_plan.py",
+  "payload": {
+    "request_id": "demo-plan-001",
+    "status": "ready_for_review",
+    "changed_files": [
+      "artifacts/health-report.json"
+    ]
+  }
+}

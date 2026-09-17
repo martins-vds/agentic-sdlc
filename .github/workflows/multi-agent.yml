@@ -1,0 +1,72 @@
+name: Multi-agent orchestration with fan-in
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "examples/project_spec.json"
+      - "scripts/multi_agent/**"
+      - ".github/workflows/multi-agent.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  specialists:
+    name: Run ${{ matrix.role }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        role: [spec-analyzer, risk-reviewer]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run specialist
+        run: |
+          mkdir -p artifacts/${{ matrix.role }}
+          if [ "${{ matrix.role }}" = "spec-analyzer" ]; then
+            python3 scripts/multi_agent/spec_analyzer.py \
+              --spec examples/project_spec.json \
+              --output artifacts/${{ matrix.role }}/report.json
+          else
+            python3 scripts/multi_agent/risk_reviewer.py \
+              --spec examples/project_spec.json \
+              --output artifacts/${{ matrix.role }}/report.json
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: specialist-${{ matrix.role }}
+          path: artifacts/${{ matrix.role }}/report.json
+          if-no-files-found: error
+
+  fan-in:
+    needs: specialists
+    runs-on: ubuntu-latest
+    concurrency:
+      group: multiagent-${{ github.ref }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: specialist-spec-analyzer
+          path: artifacts/spec-analyzer
+      - uses: actions/download-artifact@v4
+        with:
+          name: specialist-risk-reviewer
+          path: artifacts/risk-reviewer
+      - name: Merge specialist artifacts
+        run: |
+          mkdir -p artifacts/merged
+          python3 scripts/multi_agent/plan_merger.py \
+            --analysis artifacts/spec-analyzer/report.json \
+            --risks artifacts/risk-reviewer/report.json \
+            --output artifacts/merged/merged_plan.json
+          python3 scripts/multi_agent/validate_artifacts.py \
+            --plan artifacts/merged/merged_plan.json \
+            --output artifacts/merged/validation.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: merged-agent-plan
+          path: artifacts/merged
+          if-no-files-found: error

@@ -1,0 +1,31 @@
+{
+  "name": "Agentic SDLC Workshop",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+  "waitFor": "postCreateCommand",
+  "postCreateCommand": "bash .devcontainer/postCreate.sh",
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:/home/vscode/.local/bin"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.cwd": "${workspaceFolder}",
+        "workbench.startupEditor": "readme"
+      },
+      "extensions": [
+        "github.copilot",
+        "github.copilot-chat",
+        "github.vscode-github-actions"
+      ]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "request_id": "demo-plan-001",
+  "repository": "agentic-sdlc-demo",
+  "objective": "Add a deterministic health report generated from project metadata",
+  "project_metadata": {
+    "name": "agentic-sdlc-demo",
+    "status": "healthy",
+    "owner": "platform-engineering",
+    "open_issues": 2,
+    "deployment": "passing"
+  },
+  "constraints": [
+    "Use only standard library tooling",
+    "Do not change protected files",
+    "Produce a machine-readable report"
+  ],
+  "acceptance_criteria": [
+    "The report contains project name and status",
+    "The report is valid JSON",
+    "The implementation manifest identifies every generated payload file"
+  ],
+  "risk_level": "low"
+}

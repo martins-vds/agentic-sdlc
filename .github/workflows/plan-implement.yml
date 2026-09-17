@@ -1,0 +1,56 @@
+name: Deterministic plan to implement handoff
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "examples/plan_request.json"
+      - "scripts/plan/**"
+      - "scripts/implement/**"
+      - ".github/workflows/plan-implement.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate plan artifact
+        run: |
+          mkdir -p artifacts/plan
+          python3 scripts/plan/generate_plan.py \
+            --request examples/plan_request.json \
+            --output artifacts/plan/plan.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent-plan
+          path: artifacts/plan/plan.json
+          if-no-files-found: error
+
+  implement:
+    needs: plan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent-plan
+          path: artifacts/plan
+      - name: Consume plan and produce implementation artifact
+        run: |
+          mkdir -p artifacts/implementation
+          python3 scripts/implement/apply_plan.py \
+            --plan artifacts/plan/plan.json \
+            --output artifacts/implementation/implementation.json
+          python3 -m json.tool artifacts/implementation/health-report.json
+          python3 -m json.tool artifacts/implementation/implementation.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent-implementation
+          path: artifacts/implementation/
+          if-no-files-found: error

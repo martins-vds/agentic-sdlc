@@ -1,0 +1,19 @@
+{
+  "run_id": "governance-demo-001",
+  "actor": "copilot-cli",
+  "policy_version": "2026-09",
+  "requested_action": "open_pull_request",
+  "changed_paths": [
+    "src/health_report.py",
+    "tests/test_health_report.py"
+  ],
+  "permissions": [
+    "contents:read",
+    "pull-requests:write"
+  ],
+  "protected_branch": true,
+  "approval": {
+    "required": true,
+    "present": false
+  }
+}

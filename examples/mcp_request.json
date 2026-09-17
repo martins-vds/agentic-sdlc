@@ -1,0 +1,10 @@
+{
+  "jsonrpc": "2.0",
+  "id": "mcp-demo-001",
+  "tool": "repository.read",
+  "operation": "read_file",
+  "path": "examples/project_spec.json",
+  "arguments": {
+    "encoding": "utf-8"
+  }
+}

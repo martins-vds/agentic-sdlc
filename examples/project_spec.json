@@ -1,0 +1,16 @@
+{
+  "project": "Project Pulse",
+  "goal": "Create a small dashboard that reports project health and upcoming milestones",
+  "requirements": [
+    "Show project status and progress",
+    "Show owner and recent activity",
+    "Show at least two upcoming milestones",
+    "Keep data in a separate JSON file",
+    "Provide a validation command"
+  ],
+  "constraints": [
+    "Use semantic HTML and responsive CSS",
+    "Do not require a server-side database",
+    "Keep the result runnable in a Codespace"
+  ]
+}
