@@ -34,6 +34,8 @@ python3 -m pip install -r requirements-dev.txt
 python3 scripts/presentation/generate_workshop_deck.py
 ```
 
+The deck uses the GitHub Developer Training reference style and short, conversational instructor notes. Its reusable styling and font requirements are documented in [`docs/slides.md`](docs/slides.md#repository-powerpoint-style).
+
 ## Learning objectives
 
 By the end of the workshop, learners can:
